@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>运动</title>
+    <style>
+        div {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            left:500px ;
+            top: 0;
+            background: #f40;
+            opacity:0.3;
+            /* border: 2px solid #000; */
+            /* border-radius: 50%; */
+        }
+        .div1{
+            position: absolute;
+            left: 50px;
+            height: 30px;
+            width: 30px;
+            top: 10px;
+            background: green;
+        }
+        #btn {
+            position: absolute;
+            top: 300px;
+            left: 100px;
+            height: 50px;
+            width: 50px;
+            background-color: aqua;
+            border-radius: 10%;
+            border-style: none;
+            outline-style: none;
+        }
+        span{
+            position:absolute;
+            width: 2px;
+            height: 150px;
+            background-color:green;
+            left: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <!-- <div class="div1"></div> -->
+    </div>
+    <button id="btn">click</button>
+    <span></span>
+    <script>
+        //匀速运动
+        var oBtn = document.getElementById('btn');
+        var oDiv = document.getElementsByTagName('div')[0];
+        var timer;
+       
+        // console.log(oDiv.offsetLeft,oDiv.offsetTop,oDiv.offsetWidth,oDiv.offsetHeight);
+        // function sport(dom,Target) {
+        //     var Target = Target; //终止位置
+            //定义速度，判断终止位置减去当前位置是否大于0来判断当前位置是否在左边还是右边
+            // var speed =Target- dom.offsetLeft > 0 ? 3 : -3; 
+            // clearInterval(timer);
+            // timer = setInterval(function () {
+                //Math.abs()用来返回绝对值
+                //offsetLeft 获取相对于最近有定位的父级进行定位
+                // 要注意为父级设置position：relative; 否则，box会默认body为父级，不受wrap限制。
+                // box.offsetTop；box.offsetLeft: 指的是box相对于wrap偏移的距离。
+                // box.offsetWidth；box.offsetHeight:指的是box的可视宽度和高度。
+
+
+                //如果终止位置减去当前位置小于运动的速度的话就直接清除定时器，让它直接到达终止位置
+        //         if (Math.abs(Target -dom.offsetLeft) < Math.abs(speed)) {
+        //             clearInterval(timer);
+                    //dom.style.left = Target + 'px';
+        //         } else {
+        //             dom.style.left = dom.offsetLeft + speed + 'px';
+        //         }
+
+        //     }, 30)
+        // }
+        oBtn.onclick = function(){
+            sport(oDiv,300);
+        };
+
+
+
+        //缓冲运动
+        //物体的速度 距离目标点越近就越小，当到达目标点时速度减为0
+       
+            function sport(dom,Target){
+                var Target = Target;
+                var speed;
+                clearInterval(timer);
+                timer = setInterval(function(){
+                    speed = (Target - dom.offsetLeft)/4;//让目标点减去当前位置得出差的距离，从而使值越来越小
+                    // 因为设置像素值无法渲染小数，Math.ceil()向上取整、Math.floor()向下取整
+                    //因为像素值如果为300.475或者位小数的话不足以显示，显示为300px，所以要通过向上取整和向下取整来弥补
+                    speed = speed > 0 ? Math.ceil(speed):Math.floor(speed);
+
+                    if(dom.offsetLeft == Target){
+                        clearInterval(timer);
+                    }else{
+                        dom.style.left = dom.offsetLeft + speed + 'px';
+                    }
+                  
+                },30)
+            }
+
+            //获取元素的样式
+            //它的返回值是字符串
+            // function getStyle(dom,attr){
+            //     if(window.getComputedStyle){
+            //         return window.getComputedStyle(dom,null)[attr];
+            //     }else{
+            //         return dom.currentStyle[attr];
+            //     }
+            // }
+            // console.log(typeof getStyle(oDiv,'left'));
+
+            //利用缓冲运动改变透明度
+            // function sport(dom,Target){
+            //     var Target = Target;
+            //     var speed,cur;
+            //     clearInterval(timer);
+            //     timer = setInterval(function(){
+            //         cur = parseFloat(getStyle(dom,'opacity'))*100;
+            //         speed = (Target - cur)/7;
+            //         speed = speed > 0 ? Math.ceil(speed):Math.floor(speed);
+            //         if(cur == Target){
+            //             clearInterval(timer);
+            //         }else{
+            //             dom.style.opacity = (cur + speed)/100 ;
+            //         }
+                  
+            //     },30)
+            // }
+            //  oBtn.onclick = function(){
+            //                      sport(oDiv,100);
+            //                 };
+
+
+    </script>
+</body>
+
+</html>

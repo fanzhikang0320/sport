@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>缓冲运动</title>
+    <style>
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    div{
+        height: 100px;
+        width: 100px;
+        background-color: #f40;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    span{
+        display: block;
+        width: 2px;
+        height: 100px;
+        background-color: #000;
+        position: absolute;
+        left: 300px;
+        top: 0;
+    }
+    </style>
+</head>
+<body>
+    <div></div>
+    <span></span>
+    <script>
+    var oDiv = document.getElementsByTagName('div')[0];
+    move(oDiv,300);
+    function move(dom,target){
+        var timer,
+        speed = 0;
+        var target = target;
+        clearInterval(timer);
+        timer = setInterval(function(){
+        speed = (target - dom.offsetLeft)/9;
+        //因为像素值如果为300.475或者位小数的话不足以显示，显示为300px，所以要通过向上取整和向下取整来弥补
+
+        speed = speed > 0 ? Math.ceil(speed):Math.floor(speed);
+        // console.log(speed);
+        if(dom.offsetLeft == target){
+            // dom.style.style = target + 'px';
+            clearInterval(timer);
+        }else{
+            dom.style.left = dom.offsetLeft + speed + 'px';
+        }
+       
+        console.log(dom.style.left);
+    },30)
+    }
+    </script>
+</body>
+</html>

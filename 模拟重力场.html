@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>模拟重力场</title>
+    <style>
+     div {
+            position: absolute;
+            left: 0;
+            margin: 0;
+            width: 150px;
+            height: 150px;
+            background: #f40;
+            border-radius: 50%;
+        }
+
+        #btn {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -25px;
+            margin-left: -35px;
+            font-size: 18px;
+            font-weight: 400;
+            width: 70px;
+            height: 50px;
+            background-color: aqua;
+            border-radius: 10%;
+            outline-style: none;
+            border-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <button id="btn">Start</button>
+    </div>
+    <script>
+    var oDiv = document.getElementsByTagName('div')[0];
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        Move(oDiv)
+    }
+    function Move(dom){
+        clearInterval(dom.timer);
+        var speedX = 6;//定义x轴方向的初始速度（移动的像素值）
+        var speedY = 8;//定义y轴方向的初始速度
+        var g = 3;//相当于重力加速度
+        dom.timer = setInterval(function(){
+            speedY += g;//当下落时速度逐渐增大
+            var newTop = dom.offsetTop + speedY;//定义新的top值等于dom相对于上一级有定位的高度+新的速度
+            var newLeft = dom.offsetLeft + speedX;
+            //判断临界值，如果新的top大于等于可视区域减去dom元素的高度（相当于dom元素到底），则Y轴方向向上移动，取-top值
+            if(newTop >= document.documentElement.clientHeight - dom.clientHeight){
+                speedY *= -1;
+                speedX *= 0.8;//相当于摩擦力
+                speedY *= 0.8;
+                newTop = document.documentElement.clientHeight - dom.clientHeight;
+            }
+            if(newTop <= 0){
+                speedY *= -1;
+                speedX *= 0.8;
+                speedY *= 0.8;
+                newTop = 0;
+            }
+            //判断临界值，如果新的left大于等于可视区域减去dom元素的宽度（相当于dom元素到底），则X轴方向向上移动，取-left值
+            if(newLeft >= document.documentElement.clientWidth - dom.clientWidth){
+                speedX *= -1;
+                speedX *= 0.8;
+                speedY *= 0.8;
+                newLeft = document.documentElement.clientWidth - dom.clientWidth;
+            }
+            if(newLeft <= 0){
+                speedX *= -1;
+                speedX *= 0.8;
+                speedY *= 0.8;
+                newLeft = 0;
+            }
+            if(Math.abs(speedX) < 1){
+                speedX = 0;
+            }
+            if(Math.abs(speedY) < 1){
+                speedY = 0;
+            }
+            //判断停止，清除定时器
+            if(speedX == 0 && speedY == 0 && newTop == document.documentElement.clientHeight - dom.clientHeight){
+                clearInterval(dom.timer);
+                console.log('ok');
+            }else{
+                dom.style.top = newTop + 'px';
+                dom.style.left = newLeft + 'px';
+            }
+            
+        },30)
+    }
+    </script>
+</body>
+</html>

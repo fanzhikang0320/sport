@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    div{
+        width: 200px;
+        height: 200px;
+        background: #f40;
+        position: absolute;
+        left: 0;
+    }
+    #div1{
+        top: 50px;
+        opacity:0.3;
+    }
+    #div2{
+        top: 300px;
+        opacity: 1;
+    }
+    #btn{
+        position: absolute;
+        top: 0px;
+        left: 400px;
+        height: 50px;
+        width: 100px;
+        background-color: aqua;
+        border-radius: 10%;
+        border-style: none;
+        outline-style: none;
+    }
+    </style>
+</head>
+<body>
+    <div id="div1"></div>
+    <div id="div2"></div>
+    <button id = 'btn'>开始</button>
+    <script>
+    var oDiv1 = document.getElementById('div1');
+    var oDiv2 = document.getElementById('div2');
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        Move(oDiv1,{width:500,height:500,opacity:100,left:200},function(){
+            Move(oDiv2,{width:500,height:500,opacity:0,left:300},function(){alert('结束')})
+        })
+    }
+        
+        
+  
+    //dom:传进来的dom元素
+    //attrObj:传进来的需要改变的属性及值的对象
+    //callBack:回调函数，执行完之后需要执行的函数
+    function Move(dom,attrObj,callBack){
+        clearInterval(dom.timer);//
+        var speed = null,cur = null;
+        dom.timer = setInterval(function(){
+            var stop = true;
+            //利用for..in循环遍历传进来需要改变的属性及值
+            for(var attr in attrObj){
+                //判断属性名是否为'opacity'
+                if (attr == 'opacity'){
+                    cur = parseFloat(getStyle(dom,attr))*100;
+                }else{
+                    cur = parseInt(getStyle(dom,attr));
+                }
+                speed = (attrObj[attr] - cur)/7;
+                speed = speed > 0 ? Math.ceil(speed):Math.floor(speed);
+                if(attr == 'opacity'){
+                    dom.style.opacity = (cur + speed)/100;
+                }else{
+                    dom.style[attr] = cur + speed +'px';
+                }
+                //如果需要到达的属性值不等于当前的属性值，则不执行下一步
+                if(cur != attrObj[attr]){
+                    stop = false;
+                }
+                
+            }
+            //判断如果所有属性都完成的时候执行
+            if(stop){
+                    clearInterval(dom.timer);
+                    // callBack();
+                    typeof callBack == 'function' && callBack();
+                }
+        },30)
+    }
+    //  获取元素的样式
+    //  它的返回值是字符串
+    function getStyle(dom,attr){
+        if(window.getComputedStyle){
+            return window.getComputedStyle(dom,null)[attr];
+        }else{
+            return dom.currentStyle[attr];
+        }
+    }
+    </script>
+</body>
+</html>
